@@ -28,7 +28,20 @@ pipeline{
                 junit 'target/surefire-reports/*.xml'
             }
         }
-        }     
+        }
+     stage("Build & SonarQube analysis") {
+            agent any
+            steps {
+               script{
+                    last_started=env.STAGE_NAME
+            }
+              withSonarQubeEnv('Sonar_CI') {
+                 
+                sh 'java -version'
+                sh 'mvn clean package sonar:sonar'
+              }
+            }
+          }
     }
     post {  
          always {  
